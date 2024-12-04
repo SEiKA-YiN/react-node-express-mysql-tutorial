@@ -26,6 +26,7 @@ const TutorialsList = (props) => {
       })
       .catch((e) => {
         console.log(e);
+        setTutorials([]);
       });
   };
 
@@ -77,8 +78,8 @@ const TutorialsList = (props) => {
       });
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    return [
       {
         Header: "Title",
         accessor: "title",
@@ -90,9 +91,7 @@ const TutorialsList = (props) => {
       {
         Header: "Status",
         accessor: "published",
-        Cell: (props) => {
-          return props.value ? "Published" : "Pending";
-        },
+        Cell: (props) => (props.value ? "Published" : "Pending"),
       },
       {
         Header: "Actions",
@@ -104,7 +103,6 @@ const TutorialsList = (props) => {
               <span onClick={() => openTutorial(rowIdx)}>
                 <i className="far fa-edit action mr-2"></i>
               </span>
-
               <span onClick={() => deleteTutorial(rowIdx)}>
                 <i className="fas fa-trash action"></i>
               </span>
@@ -112,20 +110,19 @@ const TutorialsList = (props) => {
           );
         },
       },
-    ],
-    []
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
-    columns,
-    data: tutorials,
-  });
+    ];
+  }, []);
+  
+const {
+  getTableProps, 
+  getTableBodyProps, 
+  headerGroups, 
+  rows, 
+  prepareRow,
+} = useTable({
+  columns,
+  data: Array.isArray(tutorials) ? tutorials : [],
+});
 
   return (
     <div>
